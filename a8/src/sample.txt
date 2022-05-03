@@ -1,0 +1,138 @@
+import Inst from './components/Inst';
+import Navbar from './components/Navbar';
+import React, {  useRef } from 'react';
+
+
+export default function App(props) {
+
+    const userInput = useRef(null);
+    const elements = useRef(null);
+    const submit = useRef(null);
+
+    let x = 0
+    x = userInput.current.value
+
+    function CheckInput(x) {
+        if (isNaN(x))
+        {
+          alert('Entered value is invalid');
+          return false;
+        }
+        else if(x <= 0) {
+            alert('Please enter an integer greater than 0');
+            return false;
+        }
+        else{
+          return true;
+        }
+    }
+
+    function nextCharacter(c) {
+        return String.fromCharCode(c.charCodeAt(0) + 1);
+    }
+
+    function doPost() {       
+        var charCount = userInput.current.value;
+        var charE = elements.current.value;
+        const Characs = [];
+
+        var charName = 'A'; 
+        document.write("Input Number: " + charCount +"<br/>");
+        document.write("Elements: " + charE + "<br/>");
+        document.write("<hr />");
+        document.write("We'll call your blocks 'A', 'B', 'C', etc. <br/>")
+
+        for (var i = 0; i < charCount*2; i+=2) {
+            var arr = [];
+            for (var j = 1; j <= parseInt(charE[i]); j++) {
+                arr.push(charName + j)
+            }
+            Characs.push(arr);
+            charName = nextCharacter(charName);
+        }
+        charName = 'A';
+        for (i = 0; i < Characs.length; i++) {
+            document.write("<br>Characteristic " + charName + ": ");
+            document.write("[" + Characs[i] + "]");
+            charName = nextCharacter(charName);
+        }
+    }
+
+    function checkInput2() {
+        var charE = elements.current.value;
+        charE = charE.replaceAll(' ', '');
+        charE = charE.split(',');
+        elements.current.value = charE
+
+        if (charE.length !== x) {
+            alert('The element count does not match the input number.');
+            return false
+        }
+        
+        for (var i = 0; i < charE.length; i++) {
+            if (isNaN(parseInt(charE[i]))) {
+                alert('Uh-oh, a non-integer value element was submitted');
+                return false;
+            }
+        }
+        var elementVerified = document.getElementById('elementVerified');
+        elementVerified.style.display = 'block';
+
+        var submit = document.getElementById('submit');
+        submit.style.display = 'block';
+        return true;  
+      }
+    
+  
+
+    return (
+      <div>
+        <Navbar />
+        <Inst />
+        <hr />
+        <form>
+          <label 
+            id='userInput_id' 
+            className='text-white'>
+            Input Integer: 
+          </label>
+          <input 
+            type='text' 
+            id='userInput_id' 
+            ref={userInput} 
+            name='Input Number' 
+            placeholder='7'
+          />
+          <br />
+          <label 
+            id='elementsLabel_id' 
+            className='text-white'>
+            Elements: 
+          </label>
+          <input 
+            type='text' 
+            id='elements_id' 
+            ref={elements} 
+            name='Elements' 
+            placeholder='0, 1, 2, 3'
+          />
+          <p id='elementVerified' hidden> Requirements met. You may submit now.</p>
+          <input 
+            type='button' 
+            id='submit_id' 
+            ref={submit} 
+            onClick={checkInput2} 
+            value='Check Elements' 
+          />
+          <input 
+            type='button' 
+            id='submit' 
+            name='submit' 
+            value='Submit' 
+            onClick={doPost} 
+          hidden/>
+        </form>
+        <hr />
+        </div>
+    );
+}
